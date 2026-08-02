@@ -2,12 +2,8 @@ package tests;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.MainPage;
 import utils.TestBase;
-
-import java.time.Duration;
 
 public class OrderStatusTest extends TestBase {
 
@@ -18,6 +14,6 @@ public class OrderStatusTest extends TestBase {
         page.clickOrderStatus();
         page.enterOrderNumber("999999999");
         page.clickGo();
-        Assertions.assertTrue(driver.getPageSource().contains("Not found"));
+        Assertions.assertTrue(page.isOrderNotFoundMessageDisplayed(), "Сообщение 'Такого заказа нет' не отображается");
     }
 }

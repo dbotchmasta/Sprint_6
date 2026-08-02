@@ -4,17 +4,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.time.Duration;
+import data.ScooterColor;
 
 public class OrderPage extends BasePage {
 
-    private final WebDriverWait wait;
-
     public OrderPage(WebDriver driver) {
         super(driver);
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     // Поле "Имя"
@@ -166,44 +161,35 @@ public class OrderPage extends BasePage {
         clickNext();
     }
 
-    public void fillRentData(String date, String period, boolean black, String courierComment) {
+    public void fillRentData(String date, String period, ScooterColor color, String courierComment) {
         setDeliveryDate(date);
         selectRentPeriod(period);
-        if (black) {
-            selectBlackColor();
-        } else {
-            selectGreyColor();
+
+        switch (color) {
+            case BLACK:
+                selectBlackColor();
+                break;
+            case GREY:
+                selectGreyColor();
+                break;
         }
         setComment(courierComment);
     }
 
-    public void createOrder(String name, String surname, String address, String metro, String phone, String date, String rent, boolean black, String comment) {
-        fillCustomerData(name, surname, address, metro, phone);
-        fillRentData(date, rent, black, comment);
-        clickOrder();
-        confirmOrder();
+    public boolean isErrorDisplayed(String field) {
+        switch (field) {
+            case "Имя":
+                return isDisplayed(firstNameError);
+            case "Фамилия":
+                return isDisplayed(lastNameError);
+            case "Адрес":
+                return isDisplayed(addressError);
+            case "Метро":
+                return isDisplayed(metroError);
+            case "Телефон":
+                return isDisplayed(phoneError);
+            default:
+                throw new IllegalArgumentException("Неизвестное поле: " + field);
+        }
     }
-
-    public boolean isFirstNameErrorDisplayed() {
-        return isDisplayed(firstNameError);
-    }
-
-    public boolean isLastNameErrorDisplayed() {
-        return isDisplayed(lastNameError);
-    }
-
-    public boolean isAddressErrorDisplayed() {
-        return isDisplayed(addressError);
-    }
-
-    public boolean isMetroErrorDisplayed() {
-        return isDisplayed(metroError);
-    }
-
-    public boolean isPhoneErrorDisplayed() {
-        return isDisplayed(phoneError);
-    }
-
-
-
 }

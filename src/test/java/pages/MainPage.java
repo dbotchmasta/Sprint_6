@@ -39,6 +39,8 @@ public class MainPage extends BasePage {
     // Кнопка Go
     private final By goButton = By.xpath("//button[contains(text(),'Go!')]");
 
+    private final By orderNotFoundMessage = By.xpath("//img[@alt='Not found']");
+
     // Вопросы FAQ
     private final By[] questions = {
             By.id("accordion__heading-0"),
@@ -117,9 +119,34 @@ public class MainPage extends BasePage {
     }
 
     public void clickGo() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.elementToBeClickable(goButton));
-        find(goButton).click();
+        click(goButton);
+    }
+
+    public void switchToYandexTab() {
+        wait.until(driver -> driver.getWindowHandles().size() == 2);
+
+        String currentWindow = driver.getWindowHandle();
+
+        for (String window : driver.getWindowHandles()) {
+            if (!window.equals(currentWindow)) {
+                driver.switchTo().window(window);
+                break;
+            }
+        }
+
+        wait.until(driver -> !driver.getCurrentUrl().equals("about:blank"));
+    }
+
+    public boolean isYandexOpened() {
+        String url = driver.getCurrentUrl();
+        return url.contains("ya.ru")
+                || url.contains("yandex")
+                || url.contains("dzen");
+    }
+
+    public boolean isOrderNotFoundMessageDisplayed() {
+        return isDisplayed(orderNotFoundMessage);
     }
 
 }
